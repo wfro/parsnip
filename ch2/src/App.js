@@ -26,9 +26,9 @@ class App extends Component {
   }
 }
 
-function mapStateToProps(state) { //#A
+function mapStateToProps(state) {
   return {
-    tasks: state.tasks  //#B
+    tasks: state.tasks
   };
 }
 
