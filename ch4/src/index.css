@@ -55,16 +55,16 @@ hr {
 }
 
 /* TaskList */
-.task-list-form {
+.new-task-form {
   margin-bottom: 10px;
 }
 
-.task-list {
+.tasks {
   margin: 0 auto;
-  max-width: 660px;
+  max-width: 980px;
 }
 
-.task-list-header {
+.tasks-header {
   font-size: 18px;
   margin-bottom: 20px;
   text-align: right;
@@ -87,4 +87,17 @@ hr {
 .task-body {
   padding: 10px 20px;
   min-height: 60px;
+}
+
+.task-lists {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-list {
+  width: 300px;
+}
+
+.task-list-title {
+  margin-bottom: 10px;
 }

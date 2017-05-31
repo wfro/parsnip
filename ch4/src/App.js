@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import TaskList from './components/TaskList';
+import TasksPage from './components/TasksPage';
 import { createTask, editTask } from './actions';
 
 
@@ -16,7 +16,7 @@ class App extends Component {
   render() {
     return (
       <div className="main-content">
-        <TaskList
+        <TasksPage
           tasks={this.props.tasks}
           onCreateTask={this.onCreateTask}
           onStatusChange={this.onStatusChange}
