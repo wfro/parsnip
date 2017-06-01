@@ -1,7 +1,7 @@
 import React from 'react';
 import Task from '../components/Task';
 
-export default function TaskList(props) {
+const TaskList = props => {
   return (
     <div className="task-list">
       <div className="task-list-title">
@@ -13,3 +13,5 @@ export default function TaskList(props) {
     </div>
   );
 }
+
+export default TaskList;

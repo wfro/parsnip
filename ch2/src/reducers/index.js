@@ -13,12 +13,6 @@ const mockTasks = [
     description: 'No big deal.',
     status: 'In Progress',
   },
-  {
-    id: uniqueId(),
-    title: 'Foo',
-    description: 'Bar',
-    status: 'Completed',
-  },
 ];
 
 export default function tasks(state = { tasks: mockTasks }, action) {

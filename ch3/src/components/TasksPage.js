@@ -43,16 +43,6 @@ class TasksPage extends Component {
   };
 
   render() {
-    const init = Object.keys(TASK_STATUSES).reduce((grouped, status) => {
-      grouped[TASK_STATUSES[status]] = [];
-      return grouped;
-    }, {});
-
-    const groupedTasks = this.props.tasks.reduce((grouped, task) => {
-      grouped[task.status].push(task);
-      return grouped;
-    }, init);
-
     return (
       <div className="tasks">
         <div className="tasks-header">
@@ -81,8 +71,8 @@ class TasksPage extends Component {
             </button>
           </form>}
         <div className="task-lists">
-          {Object.keys(groupedTasks).map(status => {
-            const tasks = groupedTasks[status];
+          {TASK_STATUSES.map(status => {
+            const tasks = this.props.tasks.filter(task => task.status === status)
             return (
               <TaskList
                 key={status}
