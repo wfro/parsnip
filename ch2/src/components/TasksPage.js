@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TaskList from '../components/TaskList';
+import TaskList from './TaskList';
 
 import { TASK_STATUSES } from '../constants';
 
