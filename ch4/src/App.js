@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TasksPage from './components/TasksPage';
-import { createTask, editTask } from './actions';
+import { createTask, editTask, fetchTasks } from './actions';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.dispatch(fetchTasks());
+  }
+
   onCreateTask = ({ title, description }) => {
     this.props.dispatch(createTask({ title, description }));
   };
@@ -26,6 +30,7 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log('state: ', state);
   return {
     tasks: state.tasks,
   };

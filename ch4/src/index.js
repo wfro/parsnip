@@ -2,20 +2,21 @@ import registerServiceWorker from './registerServiceWorker';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { devToolsEnhancer } from 'redux-devtools-extension';
 import tasks from './reducers';
 import App from './App';
 import './index.css';
 
-const store = createStore(tasks, devToolsEnhancer());
+const store = createStore(tasks, applyMiddleware(thunk), devToolsEnhancer());
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 if (module.hot) {
@@ -23,7 +24,7 @@ if (module.hot) {
     const NextApp = require('./App').default;
     ReactDOM.render(
       <Provider store={store}><NextApp /></Provider>,
-      document.getElementById('root')
+      document.getElementById('root'),
     );
   });
 
