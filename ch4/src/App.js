@@ -23,6 +23,7 @@ class App extends Component {
           tasks={this.props.tasks}
           onCreateTask={this.onCreateTask}
           onStatusChange={this.onStatusChange}
+          isLoading={this.props.isLoading}
         />
       </div>
     );
@@ -30,10 +31,8 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log('state: ', state);
-  return {
-    tasks: state.tasks,
-  };
+  const { tasks, isLoading } = state.tasks;
+  return { tasks, isLoading };
 }
 
 export default connect(mapStateToProps)(App);

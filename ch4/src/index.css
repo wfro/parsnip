@@ -101,3 +101,10 @@ hr {
 .task-list-title {
   margin-bottom: 10px;
 }
+
+.tasks-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

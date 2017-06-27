@@ -43,6 +43,14 @@ class TasksPage extends Component {
   };
 
   render() {
+    if (this.props.isLoading) {
+      return (
+        <div className="tasks-loading">
+          Loading...
+        </div>
+      );
+    }
+
     return (
       <div className="tasks">
         <div className="tasks-header">
@@ -72,7 +80,9 @@ class TasksPage extends Component {
           </form>}
         <div className="task-lists">
           {TASK_STATUSES.map(status => {
-            const tasks = this.props.tasks.filter(task => task.status === status)
+            const tasks = this.props.tasks.filter(
+              task => task.status === status,
+            );
             return (
               <TaskList
                 key={status}

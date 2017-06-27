@@ -9,10 +9,20 @@ function fetchTasksSucceeded(tasks) {
   };
 }
 
+function fetchTasksStarted() {
+  return {
+    type: 'FETCH_TASKS_STARTED',
+  };
+}
+
 export function fetchTasks() {
   return dispatch => {
+    dispatch(fetchTasksStarted());
+
     api.fetchTasks().then(resp => {
-      dispatch(fetchTasksSucceeded(resp.data));
+      setTimeout(() => {
+        dispatch(fetchTasksSucceeded(resp.data));
+      }, 2000);
     });
   };
 }
@@ -44,9 +54,18 @@ function editTaskSucceeded(task) {
 }
 
 export function editTask(id, params = {}) {
-  return dispatch => {
-    api.editTask(id, params).then(resp => {
+  return (dispatch, getState) => {
+    const task = getTaskById(getState().tasks.tasks, id);
+    const updatedTask = {
+      ...task,
+      ...params,
+    };
+    api.editTask(id, updatedTask).then(resp => {
       dispatch(editTaskSucceeded(resp.data));
     });
   };
+}
+
+function getTaskById(tasks, id) {
+  return tasks.find(task => task.id === id);
 }
