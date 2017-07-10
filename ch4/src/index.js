@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { devToolsEnhancer } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import tasksReducer from './reducers';
 import App from './App';
 import './index.css';
@@ -18,15 +18,14 @@ const rootReducer = (state = {}, action) => {
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk),
-  devToolsEnhancer(),
+  composeWithDevTools(applyMiddleware(thunk))
 );
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 
 if (module.hot) {
@@ -34,7 +33,7 @@ if (module.hot) {
     const NextApp = require('./App').default;
     ReactDOM.render(
       <Provider store={store}><NextApp /></Provider>,
-      document.getElementById('root'),
+      document.getElementById('root')
     );
   });
 
