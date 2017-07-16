@@ -93,6 +93,11 @@ hr {
   min-height: 60px;
 }
 
+.task-timer {
+  text-align: right;
+  font-weight: bold;
+}
+
 .task-lists {
   display: flex;
   justify-content: space-between;

@@ -32,6 +32,14 @@ function editTaskSucceeded(task) {
   };
 }
 
+function progressTimerStart(taskId) {
+  return { type: 'TIMER_STARTED', payload: { taskId } };
+}
+
+function progressTimerStop(taskId) {
+  return { type: 'TIMER_STOPPED', payload: { taskId } };
+}
+
 export function editTask(id, params = {}) {
   return (dispatch, getState) => {
     const task = getTaskById(getState().tasks.tasks, id);
@@ -41,6 +49,16 @@ export function editTask(id, params = {}) {
     };
     api.editTask(id, updatedTask).then(resp => {
       dispatch(editTaskSucceeded(resp.data));
+
+      // if task moves into "In Progress", start timer
+      if (resp.data.status === 'In Progress') {
+        return dispatch(progressTimerStart(resp.data.id));
+      }
+
+      // if tasks move out of "In Progress", stop timer
+      if (task.status === 'In Progress') {
+        return dispatch(progressTimerStop(resp.data.id));
+      }
     });
   };
 }
