@@ -1,0 +1,58 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Learn Redux",
+      "description": "The store, actions, and reducers, oh my!",
+      "status": "Unstarted"
+    },
+    {
+      "id": 2,
+      "title": "Peace on Earth",
+      "description": "No big deal.",
+      "status": "In Progress"
+    },
+    {
+      "id": 3,
+      "title": "Create Facebook for dogs",
+      "description": "The hottest new social network",
+      "status": "Completed"
+    },
+    {
+      "title": "a",
+      "description": "b",
+      "status": "Unstarted",
+      "id": 4
+    },
+    {
+      "title": "a",
+      "description": "b",
+      "status": "Unstarted",
+      "id": 5
+    },
+    {
+      "title": "hi",
+      "description": "mom",
+      "status": "Unstarted",
+      "id": 6
+    },
+    {
+      "title": "boo",
+      "description": "bar",
+      "status": "Unstarted",
+      "id": 7
+    },
+    {
+      "title": "sup",
+      "description": "breh",
+      "status": "Unstarted",
+      "id": 8
+    },
+    {
+      "title": "stuff",
+      "description": "things",
+      "status": "Unstarted",
+      "id": 9
+    }
+  ]
+}
