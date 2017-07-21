@@ -80,14 +80,14 @@ class TasksPage extends Component {
           </form>}
         <div className="task-lists">
           {TASK_STATUSES.map(status => {
-            const tasks = this.props.tasks.filter(
-              task => task.status === status,
+            const statusTasks = this.props.tasks.filter(
+              task => task.status === status
             );
             return (
               <TaskList
                 key={status}
                 status={status}
-                tasks={tasks}
+                tasks={statusTasks}
                 onStatusChange={this.props.onStatusChange}
               />
             );
