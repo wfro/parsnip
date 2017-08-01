@@ -1,0 +1,24 @@
+{
+  "name": "parsnip-ch7",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.16.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.5",
+    "redux": "^3.6.0",
+    "redux-saga": "^0.15.4",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.6",
+    "redux-devtools-extension": "^2.13.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
