@@ -58,18 +58,38 @@ class TasksPage extends Component {
     });
   }
 
+  renderBoardSelect() {
+    const temporaryBoards = [
+      { id: 1, title: 'Short-Term Goals' },
+      { id: 2, title: 'Long-Term Goals' },
+    ];
+
+    const boardOptions = temporaryBoards.map(board => {
+      return (
+        <option key={board.id} value={board.title}>
+          {board.title}
+        </option>
+      );
+    });
+
+    return (
+      <div className="board">
+        Board:
+        <select className="board-select">{boardOptions}</select>
+      </div>
+    );
+  }
+
   render() {
     if (this.props.isLoading) {
-      return (
-        <div className="tasks-loading">
-          Loading...
-        </div>
-      );
+      return <div className="tasks-loading">Loading...</div>;
     }
 
     return (
       <div className="tasks">
         <div className="tasks-header">
+          {this.renderBoardSelect()}
+
           <button className="button button-default" onClick={this.toggleForm}>
             + New task
           </button>

@@ -74,6 +74,14 @@ hr {
   text-align: right;
 }
 
+.board {
+  float: left;
+}
+
+.board-select {
+  margin-left: 10px;
+}
+
 /* Task */
 .task {
   margin-bottom: 15px;
