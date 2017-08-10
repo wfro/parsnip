@@ -1,9 +1,44 @@
 import * as api from '../api';
 
-export function fetchTasks() {
-  return {
-    type: 'FETCH_TASKS_STARTED',
+export function fetchBoardsAndTasks() {
+  return dispatch => {
+    dispatch(fetchAllStarted());
+    Promise.all([dispatch(fetchBoards()), dispatch(fetchTasks())]).then(() => {
+      dispatch(fetchAllFinished());
+    });
   };
+}
+
+function fetchAllStarted() {
+  return { type: 'FETCH_ALL_STARTED' };
+}
+
+function fetchAllFinished() {
+  return { type: 'FETCH_ALL_FINISHED' };
+}
+
+function fetchBoards() {
+  return dispatch => {
+    return api.fetchBoards().then(resp => {
+      dispatch(fetchBoardsSucceeded(resp.data));
+    });
+  };
+}
+
+function fetchBoardsSucceeded(boards) {
+  return { type: 'FETCH_BOARDS_SUCCEEDED', payload: { boards } };
+}
+
+export function fetchTasks() {
+  return dispatch => {
+    return api.fetchTasks().then(resp => {
+      dispatch(fetchTasksSucceeded(resp.data));
+    });
+  };
+}
+
+function fetchTasksSucceeded(tasks) {
+  return { type: 'FETCH_TASKS_SUCCEEDED', payload: { tasks } };
 }
 
 function createTaskSucceeded(task) {

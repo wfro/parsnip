@@ -9,6 +9,10 @@ const client = axios.create({
   },
 });
 
+export function fetchBoards() {
+  return client.get('/boards');
+}
+
 export function fetchTasks() {
   return client.get('/tasks');
 }
