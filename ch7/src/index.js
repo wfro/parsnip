@@ -7,14 +7,19 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import tasksReducer from './reducers';
+import { tasks, boards, global } from './reducers';
 import App from './App';
 import rootSaga from './sagas';
 import './index.css';
 
 const rootReducer = (state = {}, action) => {
   return {
-    tasks: tasksReducer(state.tasks, action),
+    // NOTE: Can probably introduce combineReducers here
+    // Emphasize that boards/tasks are just simple functions, how they get
+    // their slice of state and the current action isn't magic.
+    boards: boards(state.boards, action),
+    tasks: tasks(state.tasks, action),
+    global: global(state.global, action),
   };
 };
 

@@ -17,21 +17,81 @@ function fetchAllFinished() {
   return { type: 'FETCH_ALL_FINISHED' };
 }
 
-function fetchBoards() {
-  return dispatch => {
+export const FETCH_BOARDS_STARTED = 'FETCH_BOARDS_STARTED';
+function fetchBoardsStarted(boards) {
+  return { type: FETCH_BOARDS_STARTED, payload: { boards } };
+}
+
+export const FETCH_BOARDS_SUCCEEDED = 'FETCH_BOARDS_SUCCEEDED';
+function fetchBoardsSucceeded(boards) {
+  return { type: FETCH_BOARDS_SUCCEEDED, payload: { boards } };
+}
+
+export const FETCH_BOARDS_FAILED = 'FETCH_BOARDS_FAILED';
+function fetchBoardsFailed(err) {
+  return { type: FETCH_BOARDS_FAILED, payload: err };
+}
+
+export const SET_CURRENT_BOARD_ID = 'SET_CURRENT_BOARD_ID';
+export function setCurrentBoardId(id) {
+  return {
+    type: 'SET_CURRENT_BOARD_ID',
+    payload: {
+      id,
+    },
+  };
+}
+
+// NOTE: maybe "projects" is a better name
+// NOTE: these could replace /tasks with these, this is more along the lines of what i'd do in a real app. But /tasks is also fine I think
+// function fetchBoardStarted() {
+//   return {
+//     type: 'FETCH_BOARD_STARTED'
+//   }
+// }
+//
+// function fetchBoardSucceeded(board) {
+//   return {
+//     type: 'FETCH_BOARD_SUCEEDED',
+//     payload: {
+//       board
+//     }
+//   }
+// }
+//
+// function fetchBoard(id) {
+//   return (dispatch) => {
+//     dispatch(fetchBoardStarted());
+//
+//     return api.fetchBoard(id).then(resp => {
+//       dispatch(fetchBoardSucceeded(resp.data));
+//     });
+//   };
+// }
+
+export function fetchBoards() {
+  return (dispatch, getState) => {
+    dispatch(fetchBoardsStarted());
+
     return api.fetchBoards().then(resp => {
-      dispatch(fetchBoardsSucceeded(resp.data));
+      const boards = resp.data;
+
+      // Pick a board to show on initial page load
+      if (!getState().global.currentBoardId) {
+        // TODO: This feels awkward for some reason, can't explain it.
+        const defaultBoardId = boards[0].id;
+        dispatch(setCurrentBoardId(defaultBoardId));
+        dispatch(fetchTasks(defaultBoardId));
+      }
+
+      dispatch(fetchBoardsSucceeded(boards));
     });
   };
 }
 
-function fetchBoardsSucceeded(boards) {
-  return { type: 'FETCH_BOARDS_SUCCEEDED', payload: { boards } };
-}
-
-export function fetchTasks() {
+export function fetchTasks(boardId) {
   return dispatch => {
-    return api.fetchTasks().then(resp => {
+    return api.fetchTasks(boardId).then(resp => {
       dispatch(fetchTasksSucceeded(resp.data));
     });
   };
@@ -100,4 +160,13 @@ export function editTask(id, params = {}) {
 
 function getTaskById(tasks, id) {
   return tasks.find(task => task.id === id);
+}
+
+export function setTasksSearchFilter(text) {
+  return {
+    type: 'SET_TASKS_SEARCH_FILTER',
+    payload: {
+      text,
+    },
+  };
 }

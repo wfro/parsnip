@@ -13,8 +13,13 @@ export function fetchBoards() {
   return client.get('/boards');
 }
 
-export function fetchTasks() {
-  return client.get('/tasks');
+export function fetchBoard(id) {
+  // NOTE: this might be easier to accomplish by just nesting the data from the API.
+  return client.get('/boards/id?_embed=tasks');
+}
+
+export function fetchTasks(boardId) {
+  return client.get(`/boards/${boardId}/tasks`);
 }
 
 export function createTask(params) {

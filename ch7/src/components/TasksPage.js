@@ -59,12 +59,7 @@ class TasksPage extends Component {
   }
 
   renderBoardSelect() {
-    const temporaryBoards = [
-      { id: 1, title: 'Short-Term Goals' },
-      { id: 2, title: 'Long-Term Goals' },
-    ];
-
-    const boardOptions = temporaryBoards.map(board => {
+    const boardOptions = this.props.boards.map(board => {
       return (
         <option key={board.id} value={board.title}>
           {board.title}
@@ -75,9 +70,18 @@ class TasksPage extends Component {
     return (
       <div className="board">
         Board:
-        <select className="board-select">{boardOptions}</select>
+        <select
+          className="board-select"
+          onChange={this.props.onChangeCurrentBoard}
+        >
+          {boardOptions}
+        </select>
       </div>
     );
+  }
+
+  onSearch(e) {
+    this.props.onSearch(e.target.value);
   }
 
   render() {
@@ -89,6 +93,13 @@ class TasksPage extends Component {
       <div className="tasks">
         <div className="tasks-header">
           {this.renderBoardSelect()}
+
+          <input
+            onChange={this.onSearch}
+            value={this.state.title}
+            type="text"
+            placeholder="Search..."
+          />
 
           <button className="button button-default" onClick={this.toggleForm}>
             + New task
