@@ -34,7 +34,7 @@ class App extends Component {
   };
 
   onSearch = text => {
-    this.props.dispatch(setTasksSearchFilter(text));
+    // this.props.dispatch(setTasksSearchFilter(text));
   };
 
   render() {

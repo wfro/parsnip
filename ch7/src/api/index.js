@@ -15,7 +15,7 @@ export function fetchBoards() {
 
 export function fetchBoard(id) {
   // NOTE: this might be easier to accomplish by just nesting the data from the API.
-  return client.get('/boards/id?_embed=tasks');
+  return client.get(`/boards/${id}`);
 }
 
 export function fetchTasks(boardId) {

@@ -2,43 +2,36 @@
   "boards": [
     {
       "id": 1,
-      "title": "Short-Term Goals"
+      "title": "Short-Term Goals",
+      "tasks": [
+        {
+          "id": 1,
+          "title": "Learn Redux",
+          "description": "The store, actions, and reducers, oh my!",
+          "status": "Unstarted",
+          "timer": 0
+        }
+      ]
     },
     {
       "id": 2,
-      "title": "Long-Term Goals"
-    }
-  ],
-  "tasks": [
-    {
-      "id": 1,
-      "boardId": 1,
-      "title": "Learn Redux",
-      "description": "The store, actions, and reducers, oh my!",
-      "status": "Unstarted",
-      "timer": 86
-    },
-    {
-      "id": 2,
-      "boardId": 2,
-      "title": "Peace on Earth",
-      "description": "No big deal.",
-      "status": "Unstarted",
-      "timer": 132
-    },
-    {
-      "id": 3,
-      "boardId": 2,
-      "title": "Create Facebook for dogs",
-      "description": "The hottest new social network",
-      "status": "Completed",
-      "timer": 332
-    },
-    {
-      "title": "foo",
-      "description": "bar",
-      "status": "Unstarted",
-      "id": 4
+      "title": "Long-Term Goals",
+      "tasks": [
+        {
+          "id": 2,
+          "title": "Peace on Earth",
+          "description": "No big deal.",
+          "status": "Unstarted",
+          "timer": 0
+        },
+        {
+          "id": 3,
+          "title": "Create Facebook for dogs",
+          "description": "The hottest new social network",
+          "status": "Completed",
+          "timer": 332
+        }
+      ]
     }
   ]
 }
