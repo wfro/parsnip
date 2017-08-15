@@ -58,18 +58,20 @@ class TasksPage extends Component {
     });
   }
 
+  onSearch = e => {
+    console.log('search term', e.target.value);
+  };
+
   render() {
     if (this.props.isLoading) {
-      return (
-        <div className="tasks-loading">
-          Loading...
-        </div>
-      );
+      return <div className="tasks-loading">Loading...</div>;
     }
 
     return (
       <div className="tasks">
         <div className="tasks-header">
+          <input onChange={this.onSearch} type="text" placeholder="Search..." />
+
           <button className="button button-default" onClick={this.toggleForm}>
             + New task
           </button>
