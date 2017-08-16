@@ -2,6 +2,7 @@ const initialState = {
   tasks: [],
   isLoading: false,
   error: null,
+  searchTerm: '',
 };
 
 export default function tasks(state = initialState, action) {
@@ -58,6 +59,9 @@ export default function tasks(state = initialState, action) {
         ...state,
         tasks: nextTasks,
       };
+    }
+    case 'FILTER_TASKS': {
+      return { ...state, searchTerm: action.searchTerm };
     }
     default: {
       return state;
