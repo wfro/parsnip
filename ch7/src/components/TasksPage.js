@@ -59,7 +59,7 @@ class TasksPage extends Component {
   }
 
   onSearch = e => {
-    console.log('search term', e.target.value);
+    this.props.onSearch(e.target.value);
   };
 
   render() {
