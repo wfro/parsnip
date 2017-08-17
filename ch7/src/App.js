@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import TasksPage from './components/TasksPage';
 import FlashMessage from './components/FlashMessage';
 import { createTask, editTask, fetchTasks, filterTasks } from './actions';
+import { getFilteredTasks } from './reducers/';
 
 class App extends Component {
   componentDidMount() {
@@ -40,8 +41,9 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  const { tasks, isLoading, error } = state.tasks;
-  return { tasks, isLoading, error };
+  const { tasks, isLoading, error, searchTerm } = state.tasks;
+
+  return { tasks: getFilteredTasks(tasks, searchTerm), isLoading, error };
 }
 
 export default connect(mapStateToProps)(App);
