@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import TaskList from './TaskList';
 
-import { TASK_STATUSES } from '../constants';
-
 class TasksPage extends Component {
   constructor(props) {
     super(props);
@@ -45,6 +43,17 @@ class TasksPage extends Component {
   renderTaskLists() {
     const { onStatusChange, tasks } = this.props;
 
+    return Object.keys(tasks).map(status => {
+      const tasksByStatus = tasks[status];
+      return (
+        <TaskList
+          key={status}
+          status={status}
+          tasks={tasksByStatus}
+          onStatusChange={onStatusChange}
+        />
+      );
+    });
     return TASK_STATUSES.map(status => {
       const statusTasks = tasks.filter(task => task.status === status);
       return (
