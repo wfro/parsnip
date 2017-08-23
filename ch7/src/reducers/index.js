@@ -79,7 +79,7 @@ export const getFilteredTasks = createSelector(
   [getTasks, getSearchTerm],
   (tasks, searchTerm) => {
     return tasks.filter(task => task.title.match(new RegExp(searchTerm, 'i')));
-  },
+  }
 );
 
 export const getGroupedAndFilteredTasks = createSelector(
@@ -87,10 +87,10 @@ export const getGroupedAndFilteredTasks = createSelector(
   tasks => {
     const grouped = {};
 
-    TASK_STATUSES.map(status => {
+    TASK_STATUSES.forEach(status => {
       grouped[status] = tasks.filter(task => task.status === status);
     });
 
     return grouped;
-  },
+  }
 );

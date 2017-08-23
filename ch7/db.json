@@ -22,16 +22,18 @@
       "timer": 332
     },
     {
+      "id": 4,
       "title": "Read Moby Dick",
       "description": "Or, The Whale",
       "status": "In Progress",
-      "id": 4
+      "timer": 0
     },
     {
+      "id": 5,
       "title": "Learn French",
       "description": "Je m'apple Guillaume",
       "status": "In Progress",
-      "id": 5
+      "timer": 0
     }
   ]
 }

@@ -45,7 +45,7 @@ class TasksPage extends Component {
 
     return Object.keys(tasks).map(status => {
       const tasksByStatus = tasks[status];
-      debugger;
+
       return (
         <TaskList
           key={status}
