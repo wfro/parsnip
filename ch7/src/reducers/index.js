@@ -87,7 +87,7 @@ export const getGroupedAndFilteredTasks = createSelector(
   tasks => {
     const grouped = {};
 
-    return TASK_STATUSES.map(status => {
+    TASK_STATUSES.map(status => {
       grouped[status] = tasks.filter(task => task.status === status);
     });
 
