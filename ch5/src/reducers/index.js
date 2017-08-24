@@ -15,7 +15,7 @@ export default function tasks(state = initialState, action) {
     case 'FETCH_TASKS_SUCCEEDED': {
       return {
         ...state,
-        tasks: action.payload.tasks,
+        tasks: action.response.data,
         isLoading: false,
       };
     }
