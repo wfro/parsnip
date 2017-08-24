@@ -1,41 +1,17 @@
 import * as api from '../api';
 
-function fetchTasksSucceeded(tasks) {
-  return {
-    type: 'FETCH_TASKS_SUCCEEDED',
-    payload: {
-      tasks,
-    },
-  };
-}
+import { CALL_API } from '../middleware/api';
 
-function fetchTasksFailed(error) {
-  return {
-    type: 'FETCH_TASKS_FAILED',
-    payload: {
-      error,
-    },
-  };
-}
-
-function fetchTasksStarted() {
-  return {
-    type: 'FETCH_TASKS_STARTED',
-  };
-}
+export const FETCH_TASKS_STARTED = 'FETCH_TASKS_STARTED';
+export const FETCH_TASKS_SUCCEEDED = 'FETCH_TASKS_SUCCEEDED';
+export const FETCH_TASKS_FAILURE = 'FETCH_TASKS_FAILURE';
 
 export function fetchTasks() {
-  return dispatch => {
-    dispatch(fetchTasksStarted());
-
-    api
-      .fetchTasks()
-      .then(resp => {
-        dispatch(fetchTasksSucceeded(resp.data));
-      })
-      .catch(err => {
-        dispatch(fetchTasksFailed(err.message));
-      });
+  return {
+    [CALL_API]: {
+      types: [FETCH_TASKS_STARTED, FETCH_TASKS_SUCCEEDED, FETCH_TASKS_FAILURE],
+      endpoint: '/tasks',
+    },
   };
 }
 
