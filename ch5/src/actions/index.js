@@ -15,28 +15,22 @@ export function fetchTasks() {
   };
 }
 
-function createTaskSucceeded(task) {
-  return {
-    type: 'CREATE_TASK_SUCCEEDED',
-    payload: {
-      task,
-    },
-    meta: {
-      analytics: {
-        event: 'create_task',
-        data: {
-          id: task.id,
-        },
-      },
-    },
-  };
-}
+export const CREATE_TASK_STARTED = 'CREATE_TASK_STARTED';
+export const CREATE_TASK_SUCCEEDED = 'CREATE_TASK_SUCCEEDED';
+export const CREATE_TASK_FAILED = 'CREATE_TASK_FAILED';
 
 export function createTask({ title, description, status = 'Unstarted' }) {
-  return dispatch => {
-    api.createTask({ title, description, status }).then(resp => {
-      dispatch(createTaskSucceeded(resp.data));
-    });
+  return {
+    [CALL_API]: {
+      types: [CREATE_TASK_STARTED, CREATE_TASK_SUCCEEDED, CREATE_TASK_FAILED],
+      endpoint: '/tasks',
+      method: 'POST',
+      body: {
+        title,
+        description,
+        status,
+      },
+    },
   };
 }
 
