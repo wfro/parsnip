@@ -9,6 +9,14 @@ const client = axios.create({
   },
 });
 
+export function fetchBoard(id) {
+  return client.get('/boards/id?_embed=tasks');
+}
+
+export function fetchBoards(boardId) {
+  return client.get(`/boards/${boardId}/tasks`);
+}
+
 export function fetchTasks() {
   return client.get('/tasks');
 }

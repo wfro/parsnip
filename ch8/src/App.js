@@ -2,13 +2,29 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TasksPage from './components/TasksPage';
 import FlashMessage from './components/FlashMessage';
-import { createTask, editTask, fetchTasks, filterTasks } from './actions';
+import {
+  createTask,
+  editTask,
+  fetchTasks,
+  filterTasks,
+  setCurrentBoardId,
+} from './actions';
 import { getGroupedAndFilteredTasks } from './reducers/';
 
 class App extends Component {
   componentDidMount() {
     this.props.dispatch(fetchTasks());
   }
+
+  componentDidUpdate(nextProps) {
+    if (nextProps.currentBoardId !== this.props.currentBoardId) {
+      this.props.dispatch(fetchTasks(nextProps.currentBoardId));
+    }
+  }
+
+  onChangeCurrentBoard = id => {
+    this.props.dispatch(setCurrentBoardId(id));
+  };
 
   onCreateTask = ({ title, description }) => {
     this.props.dispatch(createTask({ title, description }));
@@ -42,8 +58,9 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { isLoading, error } = state.tasks;
+  const boards = state.boards.items;
 
-  return { tasks: getGroupedAndFilteredTasks(state), isLoading, error };
+  return { tasks: getGroupedAndFilteredTasks(state), boards, isLoading, error };
 }
 
 export default connect(mapStateToProps)(App);
