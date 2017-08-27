@@ -1,8 +1,86 @@
 import * as api from '../api';
+import { normalize, schema } from 'normalizr';
 
-export function fetchTasks() {
+export const SET_CURRENT_PROJECT_ID = 'SET_CURRENT_PROJECT_ID';
+export function setCurrentProjectId(id) {
+  return {
+    type: 'SET_CURRENT_PROJECT_ID',
+    payload: {
+      id,
+    },
+  };
+}
+
+export const FETCH_PROJECTS_STARTED = 'FETCH_PROJECTS_STARTED';
+function fetchProjectsStarted(boards) {
+  return { type: FETCH_PROJECTS_STARTED, payload: { boards } };
+}
+
+export const FETCH_PROJECTS_SUCCEEDED = 'FETCH_PROJECTS_SUCCEEDED';
+function fetchProjectsSucceeded(projects) {
+  return { type: FETCH_PROJECTS_SUCCEEDED, payload: { projects } };
+}
+
+export const FETCH_PROJECTS_FAILED = 'FETCH_PROJECTS_FAILED';
+function fetchProjectsFailed(err) {
+  return { type: FETCH_PROJECTS_FAILED, payload: err };
+}
+
+const taskSchema = new schema.Entity('tasks');
+const projectSchema = new schema.Entity('projects', {
+  tasks: [taskSchema],
+});
+
+function receiveEntities(entities) {
+  return {
+    type: 'RECEIVE_ENTITIES',
+    payload: entities,
+  };
+}
+
+export function fetchProjects() {
+  return (dispatch, getState) => {
+    dispatch(fetchProjectsStarted());
+
+    return api
+      .fetchProjects()
+      .then(resp => {
+        const projects = resp.data;
+
+        const normalizedData = normalize(projects, [projectSchema]);
+
+        dispatch(receiveEntities(normalizedData));
+
+        // Pick a board to show on initial page load
+        if (!getState().page.currentProjectId) {
+          const defaultProjectId = projects[0].id;
+          dispatch(setCurrentProjectId(defaultProjectId));
+        }
+      })
+      .catch(err => {
+        fetchProjectsFailed(err);
+      });
+  };
+}
+
+// TODO: do these get migrated over to fetchBoard
+export function fetchTasksStarted() {
   return {
     type: 'FETCH_TASKS_STARTED',
+  };
+}
+
+export function fetchTasksSucceeded() {
+  return {
+    type: 'FETCH_TASKS_SUCCEEDED',
+  };
+}
+
+export function fetchTasks(boardId) {
+  return dispatch => {
+    return api.fetchTasks(boardId).then(resp => {
+      dispatch(fetchTasksSucceeded(resp.data));
+    });
   };
 }
 
@@ -15,9 +93,14 @@ function createTaskSucceeded(task) {
   };
 }
 
-export function createTask({ title, description, status = 'Unstarted' }) {
-  return dispatch => {
-    api.createTask({ title, description, status }).then(resp => {
+export function createTask({
+  projectId,
+  title,
+  description,
+  status = 'Unstarted',
+}) {
+  return (dispatch, getState) => {
+    api.createTask({ title, description, status, projectId }).then(resp => {
       dispatch(createTaskSucceeded(resp.data));
     });
   };
@@ -32,22 +115,13 @@ function editTaskSucceeded(task) {
   };
 }
 
-function progressTimerStart(taskId) {
-  return { type: 'TIMER_STARTED', payload: { taskId } };
-}
-
-function progressTimerStop(taskId) {
-  return { type: 'TIMER_STOPPED', payload: { taskId } };
-}
-
-export function editTask(id, params = {}) {
+export function editTask(task, params = {}) {
   return (dispatch, getState) => {
-    const task = getTaskById(getState().tasks.tasks, id);
     const updatedTask = {
       ...task,
       ...params,
     };
-    api.editTask(id, updatedTask).then(resp => {
+    api.editTask(task.id, updatedTask).then(resp => {
       dispatch(editTaskSucceeded(resp.data));
 
       // if task moves into "In Progress", start timer
@@ -63,8 +137,12 @@ export function editTask(id, params = {}) {
   };
 }
 
-function getTaskById(tasks, id) {
-  return tasks.find(task => task.id === id);
+function progressTimerStart(taskId) {
+  return { type: 'TIMER_STARTED', payload: { taskId } };
+}
+
+function progressTimerStop(taskId) {
+  return { type: 'TIMER_STOPPED', payload: { taskId } };
 }
 
 export function filterTasks(searchTerm) {

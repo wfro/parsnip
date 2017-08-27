@@ -1,53 +1,73 @@
 import { createSelector } from 'reselect';
 import { TASK_STATUSES } from '../constants';
 
-const initialState = {
-  tasks: [],
+const initialTasksState = {
+  items: [],
   isLoading: false,
   error: null,
-  searchTerm: '',
 };
 
-export default function tasks(state = initialState, action) {
+export function tasks(state = initialTasksState, action) {
   switch (action.type) {
-    case 'FETCH_TASKS_STARTED': {
+    case 'RECEIVE_ENTITIES': {
+      const { entities } = action.payload;
+      if (entities && entities.tasks) {
+        return {
+          ...state,
+          isLoading: false,
+          items: entities.tasks,
+        };
+      }
+
+      return state;
+    }
+    case 'CREATE_TASK_SUCCEEDED': {
+      return {
+        ...state,
+      };
+    }
+    case 'EDIT_TASK_SUCCEEDED': {
+      return {
+        ...state,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+}
+
+const initialProjectsState = {
+  items: [],
+  isLoading: false,
+  error: null,
+};
+
+export function projects(state = initialProjectsState, action) {
+  switch (action.type) {
+    case 'RECEIVE_ENTITIES': {
+      const { entities } = action.payload;
+      if (entities && entities.projects) {
+        return {
+          ...state,
+          isLoading: false,
+          items: entities.projects,
+        };
+      }
+
+      return state;
+    }
+    case 'FETCH_PROJECTS_STARTED': {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case 'FETCH_TASKS_SUCCEEDED': {
-      return {
-        ...state,
-        tasks: action.payload.tasks,
-        isLoading: false,
-      };
-    }
-    case 'FETCH_TASKS_FAILED': {
+    case 'FETCH_PROJECTS_SUCCEEDED': {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error,
-      };
-    }
-    case 'CREATE_TASK_SUCCEEDED': {
-      return {
-        ...state,
-        tasks: state.tasks.concat(action.payload.task),
-      };
-    }
-    case 'EDIT_TASK_SUCCEEDED': {
-      const { payload } = action;
-      const nextTasks = state.tasks.map(task => {
-        if (task.id === payload.task.id) {
-          return payload.task;
-        }
-
-        return task;
-      });
-      return {
-        ...state,
-        tasks: nextTasks,
+        items: action.payload.projects,
       };
     }
     case 'TIMER_INCREMENT': {
@@ -72,11 +92,22 @@ export default function tasks(state = initialState, action) {
   }
 }
 
-const getTasks = state => state.tasks.tasks;
-const getSearchTerm = state => state.tasks.searchTerm;
+const getSearchTerm = state => state.page.searchTerm;
+
+const getTasksByProjectId = state => {
+  const { currentProjectId } = state.page;
+
+  if (!currentProjectId || !state.projects.items[currentProjectId]) {
+    return [];
+  }
+
+  const taskIds = state.projects.items[currentProjectId].tasks;
+
+  return taskIds.map(id => state.tasks.items[id]);
+};
 
 export const getFilteredTasks = createSelector(
-  [getTasks, getSearchTerm],
+  [getTasksByProjectId, getSearchTerm],
   (tasks, searchTerm) => {
     return tasks.filter(task => task.title.match(new RegExp(searchTerm, 'i')));
   }
@@ -94,3 +125,31 @@ export const getGroupedAndFilteredTasks = createSelector(
     return grouped;
   }
 );
+
+export const getProjects = state => {
+  return Object.keys(state.projects.items).map(id => {
+    return state.projects.items[id];
+  });
+};
+
+const initialPageState = {
+  currentProjectId: null,
+};
+
+export function page(state = initialPageState, action) {
+  switch (action.type) {
+    case 'SET_CURRENT_PROJECT_ID': {
+      console.log({
+        ...state,
+        currentProjectId: action.payload.id,
+      });
+      return {
+        ...state,
+        currentProjectId: action.payload.id,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+}

@@ -7,14 +7,16 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import tasksReducer from './reducers';
+import { projects, tasks, page } from './reducers';
 import App from './App';
 import rootSaga from './sagas';
 import './index.css';
 
 const rootReducer = (state = {}, action) => {
   return {
-    tasks: tasksReducer(state.tasks, action),
+    projects: projects(state.projects, action),
+    tasks: tasks(state.tasks, action),
+    page: page(state.page, action),
   };
 };
 
@@ -22,7 +24,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(thunk, sagaMiddleware))
+  composeWithDevTools(applyMiddleware(thunk, sagaMiddleware)),
 );
 
 sagaMiddleware.run(rootSaga);
@@ -31,15 +33,17 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default;
     ReactDOM.render(
-      <Provider store={store}><NextApp /></Provider>,
-      document.getElementById('root')
+      <Provider store={store}>
+        <NextApp />
+      </Provider>,
+      document.getElementById('root'),
     );
   });
 
