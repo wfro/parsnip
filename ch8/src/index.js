@@ -7,15 +7,15 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import { tasks, projects } from './reducers';
+import { projects, global } from './reducers';
 import App from './App';
 import rootSaga from './sagas';
 import './index.css';
 
 const rootReducer = (state = {}, action) => {
   return {
-    tasks: tasks(state.tasks, action),
     projects: projects(state.projects, action),
+    global: global(state.global, action),
   };
 };
 

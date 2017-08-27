@@ -9,12 +9,8 @@ const client = axios.create({
   },
 });
 
-export function fetchProject(id) {
-  return client.get('/projects/id?_embed=tasks');
-}
-
-export function fetchProjects(boardId) {
-  return client.get(`/projects/${boardId}/tasks`);
+export function fetchProjects(id) {
+  return client.get('/projects?_embed=tasks');
 }
 
 export function fetchTasks() {

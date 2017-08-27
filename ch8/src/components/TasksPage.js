@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TaskList from './TaskList';
 
+// TODO: eventually connect this?
+// parent passes in ID, TasksPage fetches the right stuff
 class TasksPage extends Component {
   constructor(props) {
     super(props);
@@ -70,7 +72,6 @@ class TasksPage extends Component {
       <div className="tasks">
         <div className="tasks-header">
           <input onChange={this.onSearch} type="text" placeholder="Search..." />
-
           <button className="button button-default" onClick={this.toggleForm}>
             + New task
           </button>

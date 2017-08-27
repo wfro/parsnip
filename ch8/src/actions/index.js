@@ -1,7 +1,7 @@
 import * as api from '../api';
 
 export const SET_CURRENT_PROJECT_ID = 'SET_CURRENT_PROJECT_ID';
-export function setCurrentBoardId(id) {
+export function setCurrentProjectId(id) {
   return {
     type: 'SET_CURRENT_PROJECT_ID',
     payload: {
@@ -10,71 +10,45 @@ export function setCurrentBoardId(id) {
   };
 }
 
-function fetchBoardStarted() {
-  return {
-    type: 'FETCH_PROJECT_STARTED',
-  };
-}
-
-function fetchBoardSucceeded(board) {
-  return {
-    type: 'FETCH_PROJECT_SUCEEDED',
-    payload: {
-      board,
-    },
-  };
-}
-
-export function fetchBoard(id) {
-  return dispatch => {
-    dispatch(fetchBoardStarted());
-
-    return api.fetchBoard(id).then(resp => {
-      dispatch(fetchBoardSucceeded(resp.data));
-    });
-  };
-}
-
-/////////
-// PROJECTS
-/////////
-
 export const FETCH_PROJECTS_STARTED = 'FETCH_PROJECTS_STARTED';
-function fetchBoardsStarted(boards) {
+function fetchProjectsStarted(boards) {
   return { type: FETCH_PROJECTS_STARTED, payload: { boards } };
 }
 
 export const FETCH_PROJECTS_SUCCEEDED = 'FETCH_PROJECTS_SUCCEEDED';
-function fetchBoardsSucceeded(boards) {
-  return { type: FETCH_PROJECTS_SUCCEEDED, payload: { boards } };
+function fetchProjectsSucceeded(projects) {
+  return { type: FETCH_PROJECTS_SUCCEEDED, payload: { projects } };
 }
 
 export const FETCH_PROJECTS_FAILED = 'FETCH_PROJECTS_FAILED';
-function fetchBoardsFailed(err) {
+function fetchProjectsFailed(err) {
   return { type: FETCH_PROJECTS_FAILED, payload: err };
 }
 
-export function fetchBoards() {
+// TODO: we're not gonna be able to get away with just /projects
+
+export function fetchProjects() {
   return (dispatch, getState) => {
-    dispatch(fetchBoardsStarted());
+    dispatch(fetchProjectsStarted());
 
     return api
-      .fetchBoards()
+      .fetchProjects()
       .then(resp => {
-        const boards = resp.data;
+        const projects = resp.data;
+
+        dispatch(fetchProjectsSucceeded(projects));
 
         // Pick a board to show on initial page load
-        if (!getState().global.currentBoardId) {
+        if (!getState().global.currentProjectId) {
           // TODO: This feels awkward for some reason, can't explain it.
-          const defaultBoardId = boards[0].id;
-          dispatch(setCurrentBoardId(defaultBoardId));
-          dispatch(fetchTasks(defaultBoardId));
+          const defaultProjectId = projects[0].id;
+          dispatch(setCurrentProjectId(defaultProjectId));
         }
-
-        dispatch(fetchBoardsSucceeded(boards));
       })
       .catch(err => {
-        fetchBoardsFailed(err);
+        // TODO: demonstrate how promises swallow errors
+        console.error(err);
+        fetchProjectsFailed(err);
       });
   };
 }
@@ -109,9 +83,14 @@ function createTaskSucceeded(task) {
   };
 }
 
-export function createTask({ title, description, status = 'Unstarted' }) {
-  return dispatch => {
-    api.createTask({ title, description, status }).then(resp => {
+export function createTask({
+  projectId,
+  title,
+  description,
+  status = 'Unstarted',
+}) {
+  return (dispatch, getState) => {
+    api.createTask({ title, description, status, projectId }).then(resp => {
       dispatch(createTaskSucceeded(resp.data));
     });
   };
@@ -126,7 +105,6 @@ function editTaskSucceeded(task) {
   };
 }
 
-// TODO: Goal: three commits with each stage of the process
 export function editTask(id, params = {}) {
   return (dispatch, getState) => {
     const task = getTaskById(getState().tasks.tasks, id);

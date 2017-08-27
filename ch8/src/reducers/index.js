@@ -2,43 +2,13 @@ import { createSelector } from 'reselect';
 import { TASK_STATUSES } from '../constants';
 
 const initialState = {
-  tasks: [],
+  items: [],
   isLoading: false,
   error: null,
   searchTerm: '',
 };
 
-// Two choices
-//   - keep all boards, and current board in same reducer
-//   - have a separate reducer for current board with expanded data
-// This all depends on what the API looks like.
-// Is the response for all boards, and a single board different?
-
-// What does reddit do for
-// subreddits - fetch subreddits. fetch subreddit
-//   subreddit - ?
-//     posts - fetch posts
-//       post - ?
-//         comments
-// trello pheonix thing
-//   currentBoard reducer, boards reducer
-// trello
-//   boards in index: api/me?boards=open - they let query params give a lot of flexibility here
-//   board show: api/boards/:id?cards=open
-//
-
-// What to do for reducer state for the current board?
-//
-// Flow:
-//
-// Page loads
-// fetch all boards for the dropdown
-//   App.js fetchBoards
-// pick the first board
-//   when fetchBoards returns, call SET_CURRENT_PROJECT with board id
-//   which sets in the currentBoard reducer
-// fetch board with tasks for the page
-export function tasks(state = initialState, action) {
+export function projects(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_PROJECTS_STARTED': {
       return {
@@ -46,44 +16,60 @@ export function tasks(state = initialState, action) {
         isLoading: true,
       };
     }
-    case 'FETCH_TASKS_STARTED': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case 'FETCH_TASKS_SUCCEEDED': {
-      return {
-        ...state,
-        tasks: action.payload.tasks,
-        isLoading: false,
-      };
-    }
-    case 'FETCH_TASKS_FAILED': {
+    case 'FETCH_PROJECTS_SUCCEEDED': {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error,
+        items: action.payload.projects,
       };
     }
     case 'CREATE_TASK_SUCCEEDED': {
+      // TODO: oh my..
+      const { task } = action.payload;
+      const projectIndex = state.items.findIndex(
+        project => project.id === task.projectId,
+      );
+      const project = state.items[projectIndex];
+
+      const nextProject = {
+        ...project,
+        tasks: project.tasks.concat(task),
+      };
+
       return {
         ...state,
-        tasks: state.tasks.concat(action.payload.task),
+        items: [
+          ...state.items.slice(0, projectIndex),
+          nextProject,
+          ...state.items.slice(projectIndex + 1),
+        ],
       };
     }
     case 'EDIT_TASK_SUCCEEDED': {
-      const { payload } = action;
-      const nextTasks = state.tasks.map(task => {
-        if (task.id === payload.task.id) {
-          return payload.task;
-        }
+      // TODO: might still not work
+      const { task } = action.payload;
+      const projectIndex = state.items.findIndex(
+        project => project.id === task.projectId,
+      );
+      const project = state.items[projectIndex];
+      const taskIndex = project.tasks.findIndex(t => t.id === task.id);
 
-        return task;
-      });
+      const nextProject = {
+        ...project,
+        tasks: [
+          ...project.tasks.slice(0, taskIndex),
+          task,
+          ...project.tasks.slice(taskIndex + 1),
+        ],
+      };
+
       return {
         ...state,
-        tasks: nextTasks,
+        items: [
+          ...state.items.slice(0, projectIndex),
+          nextProject,
+          ...state.items.slice(projectIndex + 1),
+        ],
       };
     }
     case 'TIMER_INCREMENT': {
@@ -108,16 +94,34 @@ export function tasks(state = initialState, action) {
   }
 }
 
-const getTasks = state => state.tasks.tasks;
-const getSearchTerm = state => state.tasks.searchTerm;
+// TODO: how to approach this
+// Problem - how do you build selectors?
+//   - pass the whole state tree in
+//   - pass in specific pieces of the store
+
+// const getTasks = state => state.tasks;
+const getSearchTerm = state => state.searchTerm;
+
+const getTasksByProjectId = state => {
+  if (!state.global.currentProjectId) {
+    return [];
+  }
+
+  const currentProject = state.projects.items.find(
+    project => project.id === state.global.currentProjectId,
+  );
+
+  return currentProject.tasks;
+};
 
 export const getFilteredTasks = createSelector(
-  [getTasks, getSearchTerm],
+  [getTasksByProjectId, getSearchTerm],
   (tasks, searchTerm) => {
     return tasks.filter(task => task.title.match(new RegExp(searchTerm, 'i')));
   },
 );
 
+// All selectors used by setGrouped... must take the same argument?
 export const getGroupedAndFilteredTasks = createSelector(
   [getFilteredTasks],
   tasks => {
@@ -131,72 +135,20 @@ export const getGroupedAndFilteredTasks = createSelector(
   },
 );
 
-// TODO:
-// OK, first, update the API to return tasks nested within boards. This is most likely what you'll get from a real world API
-//   Mention shielding the frontend app from changes by having a layer that translates between API and frontend (normalization!)
-//     Keep reducers consistent, other components can translate data in and out of the reducer
-//     Reinforce decoupling - having these layers between core components allows them to stay unchanged, and changes can be isolated to the connections between them
-//   Explain this idea of "normalizing", what does that even mean?
-// Why is it good to have an object keyed by id instead of an array?
-
-// OK, first, update the API to return tasks nested within boards. This is most likely what you'll get from a real world API
-// this could go in three stages
-// 1) convert tasks to boards reducer, leave everything as is
-// 2) move tasks into separate reducer, normalize API response manually
-// 3) bring in normalizr
-
-const initialProjectsState = {
-  projects: [],
-  isLoading: false,
-  error: null,
-};
-
-export function projects(state = initialProjectsState, action) {
-  switch (action.type) {
-    case 'FETCH_PROJECTS_STARTED': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case 'FETCH_PROJECTS_SUCCEEDED': {
-      return {
-        ...state,
-        boards: action.payload.boards,
-      };
-    }
-    // NOTE: Likely don't need this
-    // case 'FETCH_PROJECT_SUCCEEDED': {
-    //   // TODO: this might need a different section, how do we show loading on show vs. index?
-    //   const index = state.boards.findIndex(
-    //     board => board.id === action.payload.board.id,
-    //   );
-    //
-    //   return {
-    //     boards: [
-    //       state.boards.slice(0, index),
-    //       action.payload.board,
-    //       state.boards.slice(state.boards.length),
-    //     ],
-    //     ...state,
-    //   };
-    // }
-    default: {
-      return state;
-    }
-  }
-}
-
 const initialGlobalState = {
-  currentBoardId: null,
+  currentProjectId: null,
 };
 
 export function global(state = initialGlobalState, action) {
-  switch (action) {
+  switch (action.type) {
     case 'SET_CURRENT_PROJECT_ID': {
-      return {
-        currentBoardId: action.payload.id,
+      console.log({
         ...state,
+        currentProjectId: action.payload.id,
+      });
+      return {
+        ...state,
+        currentProjectId: action.payload.id,
       };
     }
     default: {
