@@ -35,12 +35,12 @@ const initialState = {
 // fetch all boards for the dropdown
 //   App.js fetchBoards
 // pick the first board
-//   when fetchBoards returns, call SET_CURRENT_BOARD with board id
+//   when fetchBoards returns, call SET_CURRENT_PROJECT with board id
 //   which sets in the currentBoard reducer
 // fetch board with tasks for the page
 export function tasks(state = initialState, action) {
   switch (action.type) {
-    case 'FETCH_BOARDS_STARTED': {
+    case 'FETCH_PROJECTS_STARTED': {
       return {
         ...state,
         isLoading: true,
@@ -145,28 +145,28 @@ export const getGroupedAndFilteredTasks = createSelector(
 // 2) move tasks into separate reducer, normalize API response manually
 // 3) bring in normalizr
 
-const initialBoardsState = {
-  boards: [],
+const initialProjectsState = {
+  projects: [],
   isLoading: false,
   error: null,
 };
 
-export function boards(state = initialBoardsState, action) {
+export function projects(state = initialProjectsState, action) {
   switch (action.type) {
-    case 'FETCH_BOARDS_STARTED': {
+    case 'FETCH_PROJECTS_STARTED': {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case 'FETCH_BOARDS_SUCCEEDED': {
+    case 'FETCH_PROJECTS_SUCCEEDED': {
       return {
         ...state,
         boards: action.payload.boards,
       };
     }
     // NOTE: Likely don't need this
-    // case 'FETCH_BOARD_SUCCEEDED': {
+    // case 'FETCH_PROJECT_SUCCEEDED': {
     //   // TODO: this might need a different section, how do we show loading on show vs. index?
     //   const index = state.boards.findIndex(
     //     board => board.id === action.payload.board.id,
@@ -193,7 +193,7 @@ const initialGlobalState = {
 
 export function global(state = initialGlobalState, action) {
   switch (action) {
-    case 'SET_CURRENT_BOARD_ID': {
+    case 'SET_CURRENT_PROJECT_ID': {
       return {
         currentBoardId: action.payload.id,
         ...state,

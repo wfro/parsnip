@@ -58,9 +58,14 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { isLoading, error } = state.tasks;
-  const boards = state.boards.items;
+  const projects = state.projects.items;
 
-  return { tasks: getGroupedAndFilteredTasks(state), boards, isLoading, error };
+  return {
+    tasks: getGroupedAndFilteredTasks(state),
+    projects,
+    isLoading,
+    error,
+  };
 }
 
 export default connect(mapStateToProps)(App);

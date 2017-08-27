@@ -7,7 +7,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import { tasks, boards } from './reducers';
+import { tasks, projects } from './reducers';
 import App from './App';
 import rootSaga from './sagas';
 import './index.css';
@@ -15,7 +15,7 @@ import './index.css';
 const rootReducer = (state = {}, action) => {
   return {
     tasks: tasks(state.tasks, action),
-    boards: boards(state.boards, action),
+    projects: projects(state.projects, action),
   };
 };
 

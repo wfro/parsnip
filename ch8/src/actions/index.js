@@ -1,9 +1,9 @@
 import * as api from '../api';
 
-export const SET_CURRENT_BOARD_ID = 'SET_CURRENT_BOARD_ID';
+export const SET_CURRENT_PROJECT_ID = 'SET_CURRENT_PROJECT_ID';
 export function setCurrentBoardId(id) {
   return {
-    type: 'SET_CURRENT_BOARD_ID',
+    type: 'SET_CURRENT_PROJECT_ID',
     payload: {
       id,
     },
@@ -12,13 +12,13 @@ export function setCurrentBoardId(id) {
 
 function fetchBoardStarted() {
   return {
-    type: 'FETCH_BOARD_STARTED',
+    type: 'FETCH_PROJECT_STARTED',
   };
 }
 
 function fetchBoardSucceeded(board) {
   return {
-    type: 'FETCH_BOARD_SUCEEDED',
+    type: 'FETCH_PROJECT_SUCEEDED',
     payload: {
       board,
     },
@@ -36,22 +36,22 @@ export function fetchBoard(id) {
 }
 
 /////////
-// BOARDS
+// PROJECTS
 /////////
 
-export const FETCH_BOARDS_STARTED = 'FETCH_BOARDS_STARTED';
+export const FETCH_PROJECTS_STARTED = 'FETCH_PROJECTS_STARTED';
 function fetchBoardsStarted(boards) {
-  return { type: FETCH_BOARDS_STARTED, payload: { boards } };
+  return { type: FETCH_PROJECTS_STARTED, payload: { boards } };
 }
 
-export const FETCH_BOARDS_SUCCEEDED = 'FETCH_BOARDS_SUCCEEDED';
+export const FETCH_PROJECTS_SUCCEEDED = 'FETCH_PROJECTS_SUCCEEDED';
 function fetchBoardsSucceeded(boards) {
-  return { type: FETCH_BOARDS_SUCCEEDED, payload: { boards } };
+  return { type: FETCH_PROJECTS_SUCCEEDED, payload: { boards } };
 }
 
-export const FETCH_BOARDS_FAILED = 'FETCH_BOARDS_FAILED';
+export const FETCH_PROJECTS_FAILED = 'FETCH_PROJECTS_FAILED';
 function fetchBoardsFailed(err) {
-  return { type: FETCH_BOARDS_FAILED, payload: err };
+  return { type: FETCH_PROJECTS_FAILED, payload: err };
 }
 
 export function fetchBoards() {
