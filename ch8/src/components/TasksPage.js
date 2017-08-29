@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import { connect } from 'react-redux';
 import TaskList from './TaskList';
 
 // TODO: eventually connect this?
@@ -104,6 +105,77 @@ class TasksPage extends Component {
       </div>
     );
   }
+}
+
+class TasksPageContainer extends Component {
+  render() {
+    return (
+      <TasksPage
+        tasks={this.props.tasks}
+        projects={this.props.projects}
+        onCreateTask={this.onCreateTask}
+        onSearch={this.onSearch}
+        onStatusChange={this.onStatusChange}
+        isLoading={this.props.isLoading}
+      />
+    );
+  }
+}
+
+// // {
+// //   project: {
+// //     id: 1,
+// //     title: ‘Short-Term Goals’,
+// //     tasks: [
+// //       {
+// //         id: 5,
+// //         title: 'Learn Redux',
+// //         user: {
+// //           id: 1,
+// //           name: 'Richard Roe',
+// //         }
+// //       },
+// //     ],
+// //     isLoading: false,
+// //     error: null,
+// //     searchTerm: '',
+// //   }
+// // }
+// //
+// //
+// // {
+// //   project: {
+// //     id: 1,
+// //     title: 'Short-Term Goals',
+// //     tasks: [
+// //       { id: 3, title: 'Learn Redux' },
+// //       { id: 5, title: 'Defend shuffleboard world championship title' },
+// //     ],
+// //     isLoading: false,
+// //     error: null,
+// //     searchTerm: '',
+// //   },
+// // }
+// //
+// //
+// // {
+// //  id: 1,
+// //  title: 'Short-Term Goals',
+// //  tasks: [
+// //    { id: 3, title: 'Learn Redux' },
+// //    { id: 5, title: 'Defend shuffleboard world championship title' },
+// //  ],
+// }
+
+function mapStateToProps(state) {
+  const { isLoading, error } = state.tasks;
+  return {
+    isLoading,
+    error,
+    // TODO: better between getting projectId from parent, or getting it from redux?
+    // what if we want to render tasks not for just this project, e.g. for all projects?
+    items: getGroupedAndFilteredTasks(state),
+  };
 }
 
 export default TasksPage;
