@@ -101,15 +101,15 @@ export function projects(state = initialProjectsState, action) {
 const getSearchTerm = state => state.page.searchTerm;
 
 const getTasksByProjectId = state => {
-  if (!state.page.currentProjectId) {
+  const { currentProjectId } = state.page;
+
+  if (!currentProjectId || !state.projects.items[currentProjectId]) {
     return [];
   }
 
-  const currentProject = state.projects.items.find(
-    project => project.id === state.page.currentProjectId,
-  );
+  const taskIds = state.projects.items[currentProjectId].tasks;
 
-  return currentProject.tasks;
+  return taskIds.map(id => state.tasks.items[id]);
 };
 
 export const getFilteredTasks = createSelector(
@@ -132,6 +132,12 @@ export const getGroupedAndFilteredTasks = createSelector(
     return grouped;
   },
 );
+
+export const getProjects = state => {
+  return Object.keys(state.projects.items).map(id => {
+    return state.projects.items[id];
+  });
+};
 
 const initialPageState = {
   currentProjectId: null,
