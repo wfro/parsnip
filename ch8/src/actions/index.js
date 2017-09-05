@@ -1,4 +1,5 @@
 import * as api from '../api';
+import { normalize, schema } from 'normalizr';
 
 export const SET_CURRENT_PROJECT_ID = 'SET_CURRENT_PROJECT_ID';
 export function setCurrentProjectId(id) {
@@ -25,7 +26,17 @@ function fetchProjectsFailed(err) {
   return { type: FETCH_PROJECTS_FAILED, payload: err };
 }
 
-// TODO: we're not gonna be able to get away with just /projects
+const taskSchema = new schema.Entity('tasks');
+const projectSchema = new schema.Entity('projects', {
+  tasks: [taskSchema],
+});
+
+function receiveEntities(entities) {
+  return {
+    type: 'RECEIVE_ENTITIES',
+    payload: entities,
+  };
+}
 
 export function fetchProjects() {
   return (dispatch, getState) => {
@@ -36,7 +47,9 @@ export function fetchProjects() {
       .then(resp => {
         const projects = resp.data;
 
-        dispatch(fetchProjectsSucceeded(projects));
+        const normalizedData = normalize(projects, [projectSchema]);
+
+        dispatch(receiveEntities(normalizedData));
 
         // Pick a board to show on initial page load
         if (!getState().page.currentProjectId) {
