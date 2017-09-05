@@ -107,21 +107,22 @@ class TasksPage extends Component {
   }
 }
 
-class TasksPageContainer extends Component {
-  render() {
-    return (
-      <TasksPage
-        tasks={this.props.tasks}
-        projects={this.props.projects}
-        onCreateTask={this.onCreateTask}
-        onSearch={this.onSearch}
-        onStatusChange={this.onStatusChange}
-        isLoading={this.props.isLoading}
-      />
-    );
-  }
-}
-
+// TODO: scratch
+// class TasksPageContainer extends Component {
+//   render() {
+//     return (
+//       <TasksPage
+//         tasks={this.props.tasks}
+//         projects={this.props.projects}
+//         onCreateTask={this.onCreateTask}
+//         onSearch={this.onSearch}
+//         onStatusChange={this.onStatusChange}
+//         isLoading={this.props.isLoading}
+//       />
+//     );
+//   }
+// }
+//
 // // {
 // //   project: {
 // //     id: 1,
@@ -157,25 +158,72 @@ class TasksPageContainer extends Component {
 // //   },
 // // }
 // //
-// //
-// // {
-// //  id: 1,
-// //  title: 'Short-Term Goals',
-// //  tasks: [
-// //    { id: 3, title: 'Learn Redux' },
-// //    { id: 5, title: 'Defend shuffleboard world championship title' },
-// //  ],
+//
+// {
+//  id: 1,
+//  title: 'Short-Term Goals',
+//  tasks: [
+//    { id: 3, title: 'Learn Redux' },
+//    { id: 5, title: 'Defend shuffleboard world championship title' },
+//  ],
+//
+// {
+//   projects: {
+//     isLoading: false,
+//     error: null,
+//     items: [
+//       {
+//         id: 1,
+//         name: 'Short-term goals',
+//         tasks: [
+//           { id: 1, projectId: 1, ... },
+//           { id: 2, projectId: 1, ... }
+//         ]
+//       },
+//       {
+//         id: 2,
+//         name: 'Short-term goals',
+//         tasks: [
+//           { id: 3, projectId: 2, ... },
+//           { id: 4, projectId: 2, ... }
+//         ]
+//       }
+//     ]
+//   },
+//   page: {
+//     currentProjectId: null
+//   }
+// }
+//
+// [
+//   {
+//     id: 1,
+//     name: 'Short-term goals',
+//     tasks: [
+//       { id: 1, title: 'Learn Redux', status: 'In Progress' },
+//       { id: 2, title: 'Defend shuffleboard championship title', status: 'Unstarted' }
+//     ]
+//   },
+//   {
+//     id: 1,
+//     name: 'Short-term goals',
+//     tasks: [
+//       { id: 3, title: 'Achieve world peace', status: 'In Progress' },
+//       { id: 4, title: 'Invent Facebook for dogs', status: 'Unstarted' }
+//     ]
+//   }
+// ]
 // }
 
-function mapStateToProps(state) {
-  const { isLoading, error } = state.tasks;
-  return {
-    isLoading,
-    error,
-    // TODO: better between getting projectId from parent, or getting it from redux?
-    // what if we want to render tasks not for just this project, e.g. for all projects?
-    items: getGroupedAndFilteredTasks(state),
-  };
-}
+// function mapStateToProps(state) {
+//   const { isLoading, error } = state.tasks;
+//   return {
+//     isLoading,
+//     error,
+//     // TODO: better between getting projectId from parent, or getting it from redux?
+//     // what if we want to render tasks not for just this project, e.g. for all projects?
+//     items: getGroupedAndFilteredTasks(state),
+//   };
+// }
 
 export default TasksPage;

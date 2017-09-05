@@ -5,7 +5,6 @@ const initialState = {
   items: [],
   isLoading: false,
   error: null,
-  searchTerm: '',
 };
 
 export function projects(state = initialState, action) {
@@ -100,15 +99,15 @@ export function projects(state = initialState, action) {
 //   - pass in specific pieces of the store
 
 // const getTasks = state => state.tasks;
-const getSearchTerm = state => state.searchTerm;
+const getSearchTerm = state => state.page.searchTerm;
 
 const getTasksByProjectId = state => {
-  if (!state.global.currentProjectId) {
+  if (!state.page.currentProjectId) {
     return [];
   }
 
   const currentProject = state.projects.items.find(
-    project => project.id === state.global.currentProjectId,
+    project => project.id === state.page.currentProjectId,
   );
 
   return currentProject.tasks;
@@ -135,11 +134,11 @@ export const getGroupedAndFilteredTasks = createSelector(
   },
 );
 
-const initialGlobalState = {
+const initialPageState = {
   currentProjectId: null,
 };
 
-export function global(state = initialGlobalState, action) {
+export function page(state = initialPageState, action) {
   switch (action.type) {
     case 'SET_CURRENT_PROJECT_ID': {
       console.log({

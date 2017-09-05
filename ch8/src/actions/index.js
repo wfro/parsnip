@@ -39,7 +39,7 @@ export function fetchProjects() {
         dispatch(fetchProjectsSucceeded(projects));
 
         // Pick a board to show on initial page load
-        if (!getState().global.currentProjectId) {
+        if (!getState().page.currentProjectId) {
           // TODO: This feels awkward for some reason, can't explain it.
           const defaultProjectId = projects[0].id;
           dispatch(setCurrentProjectId(defaultProjectId));
@@ -105,14 +105,13 @@ function editTaskSucceeded(task) {
   };
 }
 
-export function editTask(id, params = {}) {
+export function editTask(task, params = {}) {
   return (dispatch, getState) => {
-    const task = getTaskById(getState().tasks.tasks, id);
     const updatedTask = {
       ...task,
       ...params,
     };
-    api.editTask(id, updatedTask).then(resp => {
+    api.editTask(task.id, updatedTask).then(resp => {
       dispatch(editTaskSucceeded(resp.data));
 
       // if task moves into "In Progress", start timer
@@ -126,10 +125,6 @@ export function editTask(id, params = {}) {
       }
     });
   };
-}
-
-function getTaskById(tasks, id) {
-  return tasks.find(task => task.id === id);
 }
 
 function progressTimerStart(taskId) {

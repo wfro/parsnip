@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Header from './components/Header';
 import TasksPage from './components/TasksPage';
 import FlashMessage from './components/FlashMessage';
 import {
@@ -37,30 +38,13 @@ class App extends Component {
     );
   };
 
-  onStatusChange = (id, status) => {
-    this.props.dispatch(editTask(id, { status }));
+  onStatusChange = (task, status) => {
+    this.props.dispatch(editTask(task, { status }));
   };
 
   onSearch = searchTerm => {
     this.props.dispatch(filterTasks(searchTerm));
   };
-
-  renderBoardDropdown() {
-    const projectOptions = this.props.projects.map(project =>
-      <option key={project.id} value={project.id}>
-        {project.name}
-      </option>,
-    );
-
-    return (
-      <div className="project-item">
-        Board:
-        <select onChange={this.onCurrentProjectChange} className="project-menu">
-          {projectOptions}
-        </select>
-      </div>
-    );
-  }
 
   // TODO: connect tasks at a lower level?
 
@@ -68,14 +52,17 @@ class App extends Component {
   // Think about a UI that has projects and tasks separated - trello, not even a concern?
 
   render() {
+    // TODO: after break: go back and fill in the current project shit
     return (
       <div className="container">
         {this.props.error && <FlashMessage message={this.props.error} />}
         <div className="main-content">
-          {this.renderBoardDropdown()}
+          <Header
+            projects={this.props.projects}
+            onCurrentProjectChange={this.onCurrentProjectChange}
+          />
           <TasksPage
             tasks={this.props.tasks}
-            projects={this.props.projects}
             onCreateTask={this.onCreateTask}
             onSearch={this.onSearch}
             onStatusChange={this.onStatusChange}
@@ -90,16 +77,10 @@ class App extends Component {
 function mapStateToProps(state) {
   const { isLoading, error, items } = state.projects;
 
-  //  TODO: rfc - we need currentProjectId to create a new task, do we get it from
-  //   1) here, and have App pass it directly to the action
-  //   2) Use thunks and getState to grab it before making the request
-  const { currentProjectId } = state.global;
-
   return {
     tasks: getGroupedAndFilteredTasks(state),
     projects: items,
     isLoading,
-    currentProjectId,
     error,
   };
 }
