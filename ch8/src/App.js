@@ -67,6 +67,7 @@ function mapStateToProps(state) {
   return {
     tasks: getGroupedAndFilteredTasks(state),
     projects: getProjects(state),
+    currentProjectId: state.page.currentProjectId,
     isLoading,
     error,
   };

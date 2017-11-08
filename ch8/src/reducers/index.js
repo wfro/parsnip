@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { TASK_STATUSES } from '../constants';
 
 const initialTasksState = {
-  items: [],
+  items: {},
   isLoading: false,
   error: null,
 };
@@ -21,14 +21,38 @@ export function tasks(state = initialTasksState, action) {
 
       return state;
     }
-    case 'CREATE_TASK_SUCCEEDED': {
+    case 'CREATE_TASK_SUCCEEDED':
+    case 'EDIT_TASK_SUCCEEDED': {
+      const { task } = action.payload;
+
+      const nextTasks = {
+        ...state.items,
+        [task.id]: task,
+      };
+
       return {
         ...state,
+        items: nextTasks,
       };
     }
     case 'EDIT_TASK_SUCCEEDED': {
       return {
         ...state,
+      };
+    }
+    case 'TIMER_INCREMENT': {
+      const nextTasks = Object.keys(state.items).map(taskId => {
+        const task = state.items[taskId];
+
+        if (task.id === action.payload.taskId) {
+          return { ...task, timer: task.timer + 1 };
+        }
+
+        return task;
+      });
+      return {
+        ...state,
+        tasks: nextTasks,
       };
     }
     default: {
@@ -38,7 +62,7 @@ export function tasks(state = initialTasksState, action) {
 }
 
 const initialProjectsState = {
-  items: [],
+  items: {},
   isLoading: false,
   error: null,
 };
@@ -70,21 +94,18 @@ export function projects(state = initialProjectsState, action) {
         items: action.payload.projects,
       };
     }
-    case 'TIMER_INCREMENT': {
-      const nextTasks = state.tasks.map(task => {
-        if (task.id === action.payload.taskId) {
-          return { ...task, timer: task.timer + 1 };
-        }
+    case 'CREATE_TASK_SUCCEEDED': {
+      const { task } = action.payload;
 
-        return task;
-      });
+      const project = state.items[task.projectId];
+
       return {
         ...state,
-        tasks: nextTasks,
+        [task.projectId]: {
+          ...project,
+          tasks: project.tasks.concat(task.id),
+        },
       };
-    }
-    case 'FILTER_TASKS': {
-      return { ...state, searchTerm: action.searchTerm };
     }
     default: {
       return state;
@@ -134,19 +155,19 @@ export const getProjects = state => {
 
 const initialPageState = {
   currentProjectId: null,
+  searchTerm: '',
 };
 
 export function page(state = initialPageState, action) {
   switch (action.type) {
     case 'SET_CURRENT_PROJECT_ID': {
-      console.log({
-        ...state,
-        currentProjectId: action.payload.id,
-      });
       return {
         ...state,
         currentProjectId: action.payload.id,
       };
+    }
+    case 'FILTER_TASKS': {
+      return { ...state, searchTerm: action.searchTerm };
     }
     default: {
       return state;
