@@ -35,11 +35,6 @@ export function tasks(state = initialTasksState, action) {
         items: nextTasks,
       };
     }
-    case 'EDIT_TASK_SUCCEEDED': {
-      return {
-        ...state,
-      };
-    }
     case 'TIMER_INCREMENT': {
       const nextTasks = Object.keys(state.items).map(taskId => {
         const task = state.items[taskId];
@@ -101,9 +96,12 @@ export function projects(state = initialProjectsState, action) {
 
       return {
         ...state,
-        [task.projectId]: {
-          ...project,
-          tasks: project.tasks.concat(task.id),
+        items: {
+          ...state.items,
+          [task.projectId]: {
+            ...project,
+            tasks: project.tasks.concat(task.id),
+          },
         },
       };
     }
