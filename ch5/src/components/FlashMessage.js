@@ -8,6 +8,6 @@ export default function FlashMessage(props) {
   );
 }
 
-Error.defaultProps = {
+FlashMessage.defaultProps = {
   message: 'An error occurred',
 };
