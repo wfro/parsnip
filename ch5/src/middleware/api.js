@@ -37,7 +37,7 @@ const apiMiddleware = store => next => action => {
     response =>
       next({
         type: successType,
-        response,
+        payload: response.data,
       }),
     error =>
       next({
