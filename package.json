@@ -10,7 +10,7 @@
   "scripts": {
     "precommit": "lint-staged"
   },
-    "lint-staged": {
+  "lint-staged": {
     "*/src/**/*.js": [
       "prettier --single-quote --trailing-comma es5 --write",
       "git add"

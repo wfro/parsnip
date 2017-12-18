@@ -21,7 +21,6 @@ export function tasks(state = initialTasksState, action) {
 
       return state;
     }
-    case 'CREATE_TASK_SUCCEEDED':
     case 'EDIT_TASK_SUCCEEDED': {
       const { task } = action.payload;
 
@@ -33,11 +32,6 @@ export function tasks(state = initialTasksState, action) {
       return {
         ...state,
         items: nextTasks,
-      };
-    }
-    case 'EDIT_TASK_SUCCEEDED': {
-      return {
-        ...state,
       };
     }
     case 'TIMER_INCREMENT': {

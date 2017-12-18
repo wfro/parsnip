@@ -1,13 +1,17 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import Enzyme, { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import ConnectedApp, { App } from '../App';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('the App container', () => {
   it('should render a FlashMessage component if there is an error', () => {
-    const wrapper = shallow(<App error="Boom!" />);
+    const spy = jest.fn();
+    const wrapper = shallow(<App dispatch={spy} error="Boom!" />);
 
     expect(wrapper.find('FlashMessage').exists()).toBe(true);
   });

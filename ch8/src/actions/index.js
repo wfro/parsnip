@@ -16,11 +16,6 @@ function fetchProjectsStarted(boards) {
   return { type: FETCH_PROJECTS_STARTED, payload: { boards } };
 }
 
-export const FETCH_PROJECTS_SUCCEEDED = 'FETCH_PROJECTS_SUCCEEDED';
-function fetchProjectsSucceeded(projects) {
-  return { type: FETCH_PROJECTS_SUCCEEDED, payload: { projects } };
-}
-
 export const FETCH_PROJECTS_FAILED = 'FETCH_PROJECTS_FAILED';
 function fetchProjectsFailed(err) {
   return { type: FETCH_PROJECTS_FAILED, payload: err };

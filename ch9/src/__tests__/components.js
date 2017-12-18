@@ -1,7 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 import TaskList from '../components/TaskList';
 import toJson from 'enzyme-to-json';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('the TaskList component', () => {
   it('should render a status', () => {

@@ -12,6 +12,7 @@ exports[`the TaskList component should match the last snapshot with tasks 1`] = 
     </strong>
   </div>
   <Task
+    key="1"
     task={
       Object {
         "description": "a",
@@ -23,6 +24,7 @@ exports[`the TaskList component should match the last snapshot with tasks 1`] = 
     }
   />
   <Task
+    key="2"
     task={
       Object {
         "description": "b",
@@ -34,6 +36,7 @@ exports[`the TaskList component should match the last snapshot with tasks 1`] = 
     }
   />
   <Task
+    key="3"
     task={
       Object {
         "description": "c",
