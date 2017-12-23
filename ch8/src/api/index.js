@@ -18,7 +18,7 @@ export function fetchTasks() {
 }
 
 export function createTask(params) {
-  return client.post('/tasks', params);
+  return client.post('/tasks', { ...params, timer: 0 });
 }
 
 export function editTask(id, params) {

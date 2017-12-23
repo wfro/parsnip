@@ -21,7 +21,6 @@ export function tasks(state = initialTasksState, action) {
 
       return state;
     }
-    case 'CREATE_TASK_SUCCEEDED':
     case 'EDIT_TASK_SUCCEEDED': {
       const { task } = action.payload;
 
