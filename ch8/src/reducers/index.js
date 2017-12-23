@@ -164,7 +164,7 @@ export function page(state = initialPageState, action) {
       };
     }
     case 'FILTER_TASKS': {
-      return { ...state, searchTerm: action.searchTerm };
+      return { ...state, searchTerm: action.payload.searchTerm };
     }
     default: {
       return state;

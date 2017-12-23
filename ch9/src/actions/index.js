@@ -75,5 +75,5 @@ function getTaskById(tasks, id) {
 }
 
 export function filterTasks(searchTerm) {
-  return { type: 'FILTER_TASKS', searchTerm };
+  return { type: 'FILTER_TASKS', payload: { searchTerm } };
 }
