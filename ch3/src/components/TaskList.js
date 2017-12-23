@@ -1,5 +1,5 @@
 import React from 'react';
-import Task from '../components/Task';
+import Task from './Task';
 
 const TaskList = props => {
   return (
@@ -12,6 +12,6 @@ const TaskList = props => {
       ))}
     </div>
   );
-}
+};
 
 export default TaskList;
